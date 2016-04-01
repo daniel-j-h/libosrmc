@@ -9,7 +9,8 @@
 extern "C" {
 #endif
 
-// ABI Stability
+/* ABI Stability */
+
 #define OSRMC_VERSION_MAJOR 1
 #define OSRMC_VERSION_MINOR 0
 #define OSRMC_VERSION ((OSRMC_VERSION_MAJOR << 16) | OSRMC_VERSION_MINOR)
@@ -17,15 +18,29 @@ extern "C" {
 OSRMC_API unsigned osrmc_get_version(void);
 OSRMC_API bool osrmc_is_abi_compatible(void);
 
-// Types
-typedef struct osrm* osrm_t;
-typedef struct status* status_t;
+/* Opaque Types */
 
-// Constructor
-OSRMC_API osrm_t osrm_construct(void);
+typedef struct osrmc_config* osrmc_config_t;
+typedef struct osrmc_osrm* osrmc_osrm_t;
 
-// Destructor
-OSRMC_API void osrm_destruct(osrm_t osrm);
+typedef struct osrmc_route_params* osrmc_route_params_t;
+typedef struct osrmc_route_response* osrmc_route_response_t;
+
+/* API */
+OSRMC_API osrmc_config_t osrmc_config_construct(const char* base_path);
+OSRMC_API void osrmc_config_destruct(osrmc_config_t config);
+
+OSRMC_API osrmc_osrm_t osrmc_osrm_construct(osrmc_config_t config);
+OSRMC_API void osrmc_osrm_destruct(osrmc_osrm_t osrm);
+
+OSRMC_API osrmc_route_params_t osrmc_route_params_construct(void);
+OSRMC_API void osrmc_route_params_destruct(osrmc_route_params_t params);
+OSRMC_API void osrmc_route_params_add_coordinate(osrmc_route_params_t params, float longitude, float latitude);
+
+OSRMC_API osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t params);
+OSRMC_API void osrmc_route_response_destruct(osrmc_route_response_t response);
+OSRMC_API float osrmc_route_response_distance(osrmc_route_response_t response);
+OSRMC_API float osrmc_route_response_duration(osrmc_route_response_t response);
 
 #ifdef __cplusplus
 }
