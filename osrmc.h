@@ -27,6 +27,7 @@ typedef struct osrmc_route_params* osrmc_route_params_t;
 typedef struct osrmc_route_response* osrmc_route_response_t;
 
 /* API */
+
 OSRMC_API osrmc_config_t osrmc_config_construct(const char* base_path);
 OSRMC_API void osrmc_config_destruct(osrmc_config_t config);
 
