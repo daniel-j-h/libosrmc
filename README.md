@@ -5,7 +5,7 @@
     ln -s libosrmc.so.1.0 libosrmc.so.1
     ln -s libosrmc.so.1.0 libosrmc.so
 
-##### Using libosrmc.so in C project
+##### Using libosrmc.so In C Projects
 
 Compile and link your C project.
 
@@ -18,12 +18,17 @@ We need to point `LD_LIBRARY_PATH` to the directory containing `libosrmc.so` or 
     Distance: 1715 meters
     Duration: 119 second
 
-Direct dependencies:
+Direct dependencies.
 
     env LD_LIBRARY_PATH="." readelf -d example | ag needed
      0x0000000000000001 (NEEDED)             Shared library: [libosrmc.so.1]
      0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
 
+##### Writing Bindings (Python Example)
+
+See `osrmcpy.py` for how to use the FFI for interfacing and for an example at the end.
+
+    env LD_LIBRARY_PATH="." python2 osrmcpy.py
 
 ##### Todo
 
@@ -31,3 +36,4 @@ Direct dependencies:
     - [ ] Install Target
     - [ ] Error Handling
     - [ ] Use from Language FFIs
+    - [ ] Make Python Integration Exception-Safe
