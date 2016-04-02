@@ -4,7 +4,7 @@ TARGET = libosrmc.so.1.0
 OBJECTS = osrmc.o
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $@ $<
+	$(CXX) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
 clean:
 	@$(RM) $(OBJECTS) $(TARGET)
