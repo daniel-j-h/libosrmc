@@ -37,3 +37,9 @@ See `osrmcpy.py` for how to use the FFI for interfacing and for an example at th
     - [ ] Error Handling
     - [ ] Use from Language FFIs
     - [ ] Make Python Integration Exception-Safe
+
+##### License
+
+Copyright © 2016 Daniel J. Hofmann
+
+Distributed under the MIT License (MIT).
