@@ -16,7 +16,7 @@
 /* ABI stability */
 
 unsigned osrmc_get_version(void) { return OSRMC_VERSION; }
-bool osrmc_is_abi_compatible(void) { return osrmc_get_version() >> 16u == OSRMC_VERSION_MAJOR; }
+int osrmc_is_abi_compatible(void) { return osrmc_get_version() >> 16u == OSRMC_VERSION_MAJOR; }
 
 /* API */
 

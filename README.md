@@ -7,9 +7,9 @@
 
 ##### Using libosrmc.so In C Projects
 
-Compile and link your C project.
+Compile and link your ANSI C standard (or higher) conforming project.
 
-    gcc -O2 -Wall -Wextra -pedantic -std=c99 -I. -L. example.c -losrmc -o example
+    gcc -O2 -Wall -Wextra -pedantic -std=c89 -I. -L. example.c -losrmc -o example
 
 We need to point `LD_LIBRARY_PATH` to the directory containing `libosrmc.so` or install `libosrmc.so` into `/usr/lib/`.
 

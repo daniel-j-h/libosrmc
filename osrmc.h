@@ -1,8 +1,6 @@
 #ifndef OSRM_C_H_
 #define OSRM_C_H_
 
-#include <stdbool.h>
-
 #include "visibility.h"
 
 #ifdef __cplusplus
@@ -16,7 +14,7 @@ extern "C" {
 #define OSRMC_VERSION ((OSRMC_VERSION_MAJOR << 16) | OSRMC_VERSION_MINOR)
 
 OSRMC_API unsigned osrmc_get_version(void);
-OSRMC_API bool osrmc_is_abi_compatible(void);
+OSRMC_API int osrmc_is_abi_compatible(void);
 
 /* Opaque Types */
 
