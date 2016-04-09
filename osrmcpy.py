@@ -1,6 +1,9 @@
 #!/usr/bin/env python2
 
+from __future__ import print_function, division
+
 import sys
+import random
 import ctypes as c
 from collections import namedtuple
 from contextlib import contextmanager
@@ -47,6 +50,27 @@ lib.osrmc_route_response_distance.argtypes = [c.c_void_p]
 lib.osrmc_route_response_duration.restype = c.c_float
 lib.osrmc_route_response_duration.argtypes = [c.c_void_p]
 
+# Table Params
+lib.osrmc_table_params_construct.restype = c.c_void_p
+lib.osrmc_table_params_construct.argtypes = None
+
+lib.osrmc_table_params_destruct.restype = None
+lib.osrmc_table_params_destruct.argtypes = [c.c_void_p]
+
+lib.osrmc_table_params_add_coordinate.restype = None
+lib.osrmc_table_params_add_coordinate.argtypes = [c.c_void_p, c.c_float, c.c_float]
+
+# Table
+
+lib.osrmc_table.restype = c.c_void_p
+lib.osrmc_table.argtypes = [c.c_void_p, c.c_void_p]
+
+lib.osrmc_table_response_destruct.restype = None
+lib.osrmc_table_response_destruct.argtypes = [c.c_void_p]
+
+lib.osrmc_table_response_duration.restype = c.c_float
+lib.osrmc_table_response_duration.argtypes = [c.c_void_p, c.c_ulong, c.c_ulong]
+
 
 # Python Library Interface
 
@@ -74,9 +98,22 @@ def scoped_route(osrm, params):
     yield route
     lib.osrmc_route_response_destruct(route)
 
+@contextmanager
+def scoped_table_params():
+    params = lib.osrmc_table_params_construct()
+    yield params
+    lib.osrmc_table_params_destruct(params)
+
+@contextmanager
+def scoped_table(osrm, params):
+    route = lib.osrmc_table(osrm, params)
+    yield route
+    lib.osrmc_table_response_destruct(route)
+
 
 Coordinate = namedtuple('Coordinate', 'longitude latitude')
 Route = namedtuple('Route', 'distance duration')
+Table = list
 
 
 class OSRM:
@@ -111,6 +148,20 @@ class OSRM:
                 else:
                     return None
 
+    def table(_, coordinates):
+        with scoped_table_params() as params:
+            assert params
+
+            for coordinate in coordinates:
+                lib.osrmc_table_params_add_coordinate(params, coordinate.longitude, coordinate.latitude)
+
+            with scoped_table(_.osrm, params) as table:
+                if table:
+                    n = len(coordinates)  # Only symmetric version supported
+                    return Table([lib.osrmc_table_response_duration(table, s, t) for t in range(n)] for s in range(n))
+                else:
+                    return None
+
 
 # Example User Code
 def main():
@@ -122,6 +173,7 @@ def main():
     start = Coordinate(longitude=7.419758, latitude=43.731142)
     end = Coordinate(longitude=7.419505, latitude=43.736825)
 
+
     route = osrm.route([start, end])
 
     if route:
@@ -129,6 +181,26 @@ def main():
         print('Duration: {0:.0f} seconds'.format(route.duration))
     else:
         print('No route found')
+
+
+    # Somewhere in an area in Monaco..
+    bottom_left = Coordinate(longitude=7.413194, latitude=43.731056)
+    top_right = Coordinate(longitude=7.421639, latitude=43.735440)
+
+    random_coordinate = lambda: Coordinate(longitude=random.uniform(bottom_left.longitude, top_right.longitude),
+                                           latitude=random.uniform(bottom_left.latitude, top_right.latitude))
+
+    table = osrm.table([random_coordinate() for _ in range(10)])
+
+    if table:
+        print('Table')
+        for row in table:
+            for duration in row:
+                print('{0:.0f}s\t'.format(duration), end='')
+            print()
+    else:
+        print('No table found')
+
 
 
 if __name__ == '__main__':

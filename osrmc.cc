@@ -1,13 +1,15 @@
 #include <cassert>
+#include <cmath>
 #include <utility>
 
-#include <osrm/osrm.hpp>
-#include <osrm/status.hpp>
 #include <osrm/coordinate.hpp>
 #include <osrm/engine_config.hpp>
-#include <osrm/storage_config.hpp>
 #include <osrm/json_container.hpp>
+#include <osrm/osrm.hpp>
 #include <osrm/route_parameters.hpp>
+#include <osrm/table_parameters.hpp>
+#include <osrm/status.hpp>
+#include <osrm/storage_config.hpp>
 
 #include "osrmc.h"
 
@@ -106,7 +108,7 @@ float osrmc_route_response_distance(osrmc_route_response_t response) try {
 
 } catch (...) {
   assert(false);
-  return -1;
+  return INFINITY;
 }
 
 float osrmc_route_response_duration(osrmc_route_response_t response) try {
@@ -121,5 +123,67 @@ float osrmc_route_response_duration(osrmc_route_response_t response) try {
 
 } catch (...) {
   assert(false);
-  return -1;
+  return INFINITY;
+}
+
+osrmc_table_params_t osrmc_table_params_construct(void) try {
+  auto* out = new osrm::TableParameters;
+
+  /* Only symmetric version supported: empty .sources, .destinations  means all to all */
+
+  return reinterpret_cast<osrmc_table_params_t>(out);
+
+} catch (...) {
+  return nullptr;
+}
+
+void osrmc_table_params_destruct(osrmc_table_params_t params) {
+  delete reinterpret_cast<osrm::TableParameters*>(params);
+}
+
+void osrmc_table_params_add_coordinate(osrmc_table_params_t params, float longitude, float latitude) try {
+  auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
+
+  auto longitude_typed = osrm::util::FloatLongitude(longitude);
+  auto latitude_typed = osrm::util::FloatLatitude(latitude);
+
+  params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
+
+} catch (...) {
+  assert(false);
+}
+
+osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params) try {
+  auto* osrm_typed = reinterpret_cast<osrm::OSRM*>(osrm);
+  auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
+
+  auto* out = new osrm::json::Object;
+
+  const auto status = osrm_typed->Table(*params_typed, *out);
+
+  if (status == osrm::Status::Ok)
+    return reinterpret_cast<osrmc_table_response_t>(out);
+  else
+    return nullptr;
+
+} catch (...) {
+  return nullptr;
+}
+
+void osrmc_table_response_destruct(osrmc_table_response_t response) {
+  delete reinterpret_cast<osrm::json::Object*>(response);
+}
+
+float osrmc_table_response_duration(osrmc_table_response_t response, unsigned long from, unsigned long to) try {
+  auto* response_typed = reinterpret_cast<osrm::json::Object*>(response);
+
+  auto& durations = response_typed->values["durations"].get<osrm::json::Array>();
+  auto& durations_from_to_all = durations.values.at(from).get<osrm::json::Array>();
+  auto duration = durations_from_to_all.values.at(to).get<osrm::json::Number>().value;
+
+  return duration;
+
+} catch (...) {
+  assert(false);
+  return INFINITY;
 }
