@@ -9,26 +9,26 @@
 
 Compile and link your ANSI C standard (or higher) conforming project.
 
-    gcc -O2 -Wall -Wextra -pedantic -std=c89 -I. -L. example.c -losrmc -o example
+    gcc -O2 -Wall -Wextra -pedantic -std=c89 -I. -L. example_c89.c -losrmc -o example_c89
 
 We need to point `LD_LIBRARY_PATH` to the directory containing `libosrmc.so` or install `libosrmc.so` into `/usr/lib/`.
 
-    env LD_LIBRARY_PATH="." ldd ./example
-    env LD_LIBRARY_PATH="." ./example /tmp/osrm-backend/test/data/monaco.osrm
+    env LD_LIBRARY_PATH="." ldd ./example_c89
+    env LD_LIBRARY_PATH="." ./example_c89 /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
     Duration: 119 second
 
 Direct dependencies.
 
-    env LD_LIBRARY_PATH="." readelf -d example | ag needed
+    env LD_LIBRARY_PATH="." readelf -d example_c89 | ag needed
      0x0000000000000001 (NEEDED)             Shared library: [libosrmc.so.1]
      0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
 
 ##### Writing Bindings (Python Example)
 
-See `osrmcpy.py` for how to use the FFI for interfacing and for an example at the end.
+See `osrmcpy.py` for the FFI bindings and `example_python.py` for usage.
 
-    env LD_LIBRARY_PATH="." python2 osrmcpy.py /tmp/osrm-backend/test/data/monaco.osrm
+    env LD_LIBRARY_PATH="." python2 example_python2.py /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
     Duration: 119 seconds
     Table

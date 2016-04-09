@@ -1,8 +1,8 @@
 osrmc.o
-example
+example_c89
 
 libosrmc.so.1.0
 libosrmc.so.1
 libosrmc.so
 
-py[cod]
+*.py[cod]
