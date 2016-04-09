@@ -43,6 +43,27 @@ See `osrmcpy.py` for the FFI bindings and `example_python.py` for usage.
     172s    17s     147s    134s    24s     64s     79s     1s      0s      103s
     72s     143s    204s    31s     150s    120s    136s    127s    126s    0s
 
+##### Google's or-tools Integration
+
+Install or-tools.
+
+    wget https://github.com/google/or-tools/releases/download/v2015-12/Google.OrTools.python.examples.3393.tar.gz
+    tar xf Google.OrTools.python.examples.3393.tar.gz
+    cd ortools_examples
+    python2 setup.py install --user
+
+Solve random Traveling Salesman Problem instance with or-tools based on OSRM Table service durations.
+
+    env LD_LIBRARY_PATH="." python2 example_or_tools.py /tmp/osrm-backend/test/data/monaco.osrm
+    Solution: 1686 seconds
+
+References:
+
+- https://developers.google.com/optimization/routing/tsp
+- https://developers.google.com/optimization/installing#python
+- https://or-tools.googlecode.com/svn/trunk/documentation/user_manual/manual/introduction.html
+- https://or-tools.googlecode.com/svn/trunk/documentation/user_manual/manual/TSP.html
+- https://or-tools.googlecode.com/svn/trunk/documentation/user_manual/manual/VRP.html
 
 ##### Todo
 
