@@ -16,7 +16,7 @@ We need to point `LD_LIBRARY_PATH` to the directory containing `libosrmc.so` or 
     env LD_LIBRARY_PATH="." ldd ./example_c89
     env LD_LIBRARY_PATH="." ./example_c89 /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
-    Duration: 119 second
+    Duration: 119 seconds
 
 Direct dependencies.
 

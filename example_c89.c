@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
   duration = osrmc_route_response_duration(response);
 
   printf("Distance: %.0f meters\n", distance);
-  printf("Duration: %.0f second\n", duration);
+  printf("Duration: %.0f seconds\n", duration);
 
   return EXIT_SUCCESS;
 
