@@ -8,7 +8,9 @@ import Foreign.Ptr
 import Data.Text (Text, unpack)
 import Data.Monoid ((<>))
 import Control.Exception (bracket)
-import Control.Monad (when)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.Trans.Cont (ContT(..), runContT)
+import Control.Applicative ((<$>), (<*>))
 
 
 -- Opaque Types
@@ -17,10 +19,6 @@ newtype Config = Config { getConfig :: Ptr Config }
 newtype OSRM = OSRM { getOSRM :: Ptr OSRM }
 newtype RouteParams = RouteParams { getRouteParams :: Ptr RouteParams }
 newtype RouteResponse = RouteResponse { getRouteResponse :: Ptr RouteResponse }
-
-data Coordinate = Coordinate { longitude :: Float
-                             , latitude  :: Float} deriving (Show)
-
 
 -- ABI Stability
 
@@ -53,7 +51,7 @@ foreign import ccall "osrmc_route_params_destruct"
     destructRouteParams :: RouteParams -> IO ()
 
 foreign import ccall "osrmc_route_params_add_coordinate"
-    addCoordinate :: RouteParams -> CFloat -> CFloat -> IO ()
+    addCoordinate :: RouteParams -> Float -> Float -> IO ()
 
 
 foreign import ccall "osrmc_route"
@@ -63,10 +61,17 @@ foreign import ccall "osrmc_route_response_destruct"
     destructRouteResponse :: RouteResponse -> IO ()
 
 foreign import ccall "osrmc_route_response_distance"
-    distance :: RouteResponse -> IO CFloat
+    distance :: RouteResponse -> IO Float
 
 foreign import ccall "osrmc_route_response_duration"
-    duration :: RouteResponse -> IO CFloat
+    duration :: RouteResponse -> IO Float
+
+
+-- Haskell Library Interface
+
+data Coordinate = Coordinate { longitude :: Float
+                             , latitude  :: Float} deriving (Show)
+
 
 withConfig :: Text -> (Config -> IO ()) -> IO ()
 withConfig basePath body = bracket construct destruct body
@@ -90,35 +95,28 @@ withRoute osrm params body = bracket construct destruct body
 
 
 -- TODO(daniel-j-h):
---  - Error handling, rip out fail
---  - Eliminate multiple level bracketing, continuation monad (?)
---  - Nice abstractions, example below is ugly and imperative as it's using low level primitives
---  - Hints: EitherT, ConT, ResourceT
+--  - Error handling, EitherT
+--  - Nice abstractions
 
 
 main = do
     let base  = "/tmp/osrm-backend/test/data/monaco.osrm"
 
-    let start = Coordinate{ longitude=7.419758, latitude=43.731142 }
-    let end   = Coordinate{ longitude=7.419505, latitude=43.736825 }
+    let start = Coordinate{longitude=7.419758, latitude=43.731142}
+    let end   = Coordinate{longitude=7.419505, latitude=43.736825}
 
-    withConfig base $ \config -> do
-        when ((getConfig config) == nullPtr) $ fail "config"
+    flip runContT return $ do
+        config <- ContT $ withConfig base
+        osrm   <- ContT $ withOSRM config
 
-        withOSRM config $ \osrm -> do
-            when ((getOSRM osrm) == nullPtr) $ fail "osrm"
+        params <- ContT $ withRouteParams
+        liftIO $ addCoordinate params (longitude start) (latitude start)
+        liftIO $ addCoordinate params (longitude end)   (latitude end)
 
-            withRouteParams $ \params -> do
-                when ((getRouteParams params) == nullPtr) $ fail "params"
+        response <- ContT $ withRoute osrm params
 
-                addCoordinate params (CFloat . longitude $ start) (CFloat . latitude $ start)
-                addCoordinate params (CFloat . longitude $ end)   (CFloat . latitude $ end)
+        dist <- liftIO $ distance response
+        dura <- liftIO $ duration response
 
-                withRoute osrm params $ \response -> do
-                    when ((getRouteResponse response) == nullPtr) $ fail "response"
-
-                    dist <- distance response
-                    dura <- duration response
-
-                    putStrLn $ "Distance: " <> (show dist) <> " meters"
-                    putStrLn $ "Duration: " <> (show dist) <> " seconds"
+        liftIO . putStrLn $ "Distance: " <> (show dist) <> " meters"
+        liftIO . putStrLn $ "Duration: " <> (show dist) <> " seconds"
