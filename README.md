@@ -65,6 +65,21 @@ References:
 - https://or-tools.googlecode.com/svn/trunk/documentation/user_manual/manual/TSP.html
 - https://or-tools.googlecode.com/svn/trunk/documentation/user_manual/manual/VRP.html
 
+##### Writing Bindings (Haskell Example)
+
+See `example_haskell.hs`. Either use `runghc` for convenience.
+
+    env LD_LIBRARY_PATH="." runghc -losrmc example_haskell.hs
+    Distance: 1715.3 meters
+    Duration: 1715.3 seconds
+
+Or build an executable.
+
+    ghc --make -L. -losrmc example_haskell.hs
+    env LD_LIBRARY_PATH="." ./example_haskell
+    Distance: 1715.3 meters
+    Duration: 1715.3 seconds
+
 ##### Todo
 
 - [ ] Remaining Services

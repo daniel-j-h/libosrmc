@@ -1,5 +1,8 @@
 osrmc.o
 example_c89
+example_haskell
+example_haskell.hi
+example_haskell.o
 
 libosrmc.so.1.0
 libosrmc.so.1
