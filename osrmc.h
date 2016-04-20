@@ -29,6 +29,10 @@ typedef struct osrmc_route_response* osrmc_route_response_t;
 typedef struct osrmc_table_params* osrmc_table_params_t;
 typedef struct osrmc_table_response* osrmc_table_response_t;
 
+typedef struct osrmc_nearest_params* osrmc_nearest_params_t;
+
+typedef struct osrmc_match_params* osrmc_match_params_t;
+
 /* API */
 
 OSRMC_API osrmc_config_t osrmc_config_construct(const char* base_path);
@@ -58,6 +62,14 @@ OSRMC_API void osrmc_table_params_add_destination(osrmc_table_params_t params, s
 OSRMC_API osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params);
 OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response);
 OSRMC_API float osrmc_table_response_duration(osrmc_table_response_t response, unsigned long from, unsigned long to);
+
+OSRMC_API osrmc_nearest_params_t osrmc_nearest_params_construct(void);
+OSRMC_API void osrmc_nearest_params_destruct(osrmc_nearest_params_t params);
+OSRMC_API void osrmc_nearest_set_number_of_results(osrmc_nearest_params_t params, unsigned n);
+
+OSRMC_API osrmc_match_params_t osrmc_match_params_construct(void);
+OSRMC_API void osrmc_match_params_destruct(osrmc_match_params_t params);
+OSRMC_API void osrmc_match_params_add_timestamp(osrmc_match_params_t params, unsigned timestamp);
 
 #ifdef __cplusplus
 }

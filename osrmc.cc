@@ -8,6 +8,8 @@
 #include <osrm/osrm.hpp>
 #include <osrm/route_parameters.hpp>
 #include <osrm/table_parameters.hpp>
+#include <osrm/nearest_parameters.hpp>
+#include <osrm/match_parameters.hpp>
 #include <osrm/status.hpp>
 #include <osrm/storage_config.hpp>
 
@@ -210,4 +212,45 @@ float osrmc_table_response_duration(osrmc_table_response_t response, unsigned lo
 } catch (...) {
   assert(false);
   return INFINITY;
+}
+
+osrmc_nearest_params_t osrmc_nearest_params_construct(void) try {
+  auto* out = new osrm::NearestParameters;
+
+  return reinterpret_cast<osrmc_nearest_params_t>(out);
+
+} catch (...) {
+  return nullptr;
+}
+
+void osrmc_nearest_params_destruct(osrmc_nearest_params_t params) {
+  delete reinterpret_cast<osrm::NearestParameters*>(params);
+}
+
+osrmc_match_params_t osrmc_match_params_construct(void) try {
+  auto* out = new osrm::MatchParameters;
+
+  return reinterpret_cast<osrmc_match_params_t>(out);
+
+} catch (...) {
+  return nullptr;
+}
+
+void osrmc_match_params_destruct(osrmc_match_params_t params) {
+  delete reinterpret_cast<osrm::MatchParameters*>(params);
+}
+
+void osrmc_nearest_set_number_of_results(osrmc_nearest_params_t params, unsigned n) {
+  auto* params_typed = reinterpret_cast<osrm::NearestParameters*>(params);
+
+  params_typed->number_of_results = n;
+}
+
+void osrmc_match_params_add_timestamp(osrmc_match_params_t params, unsigned timestamp) try {
+  auto* params_typed = reinterpret_cast<osrm::MatchParameters*>(params);
+
+  params_typed->timestamps.emplace_back(timestamp);
+
+} catch (...) {
+  assert(false);
 }
