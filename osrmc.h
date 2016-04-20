@@ -52,6 +52,8 @@ OSRMC_API float osrmc_route_response_duration(osrmc_route_response_t response);
 
 OSRMC_API osrmc_table_params_t osrmc_table_params_construct(void);
 OSRMC_API void osrmc_table_params_destruct(osrmc_table_params_t params);
+OSRMC_API void osrmc_table_params_add_source(osrmc_table_params_t params, size_t index);
+OSRMC_API void osrmc_table_params_add_destination(osrmc_table_params_t params, size_t index);
 
 OSRMC_API osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params);
 OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response);

@@ -163,6 +163,20 @@ void osrmc_table_params_destruct(osrmc_table_params_t params) {
   delete reinterpret_cast<osrm::TableParameters*>(params);
 }
 
+void osrmc_table_params_add_source(osrmc_table_params_t params, size_t index) try {
+  auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
+  params_typed->sources.emplace_back(index);
+} catch(...) {
+  assert(false);
+}
+
+void osrmc_table_params_add_destination(osrmc_table_params_t params, size_t index) try {
+  auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
+  params_typed->destinations.emplace_back(index);
+} catch(...) {
+  assert(false);
+}
+
 osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params) try {
   auto* osrm_typed = reinterpret_cast<osrm::OSRM*>(osrm);
   auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
