@@ -42,7 +42,8 @@ OSRMC_API osrmc_osrm_t osrmc_osrm_construct(osrmc_config_t config);
 OSRMC_API void osrmc_osrm_destruct(osrmc_osrm_t osrm);
 
 OSRMC_API void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float latitude);
-OSRMC_API void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, float latitude, float radius, int bearing, int range);
+OSRMC_API void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, float latitude, float radius,
+                                                int bearing, int range);
 
 OSRMC_API osrmc_route_params_t osrmc_route_params_construct(void);
 OSRMC_API void osrmc_route_params_destruct(osrmc_route_params_t params);

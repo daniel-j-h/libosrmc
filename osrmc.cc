@@ -18,6 +18,7 @@
 /* ABI stability */
 
 unsigned osrmc_get_version(void) { return OSRMC_VERSION; }
+
 int osrmc_is_abi_compatible(void) { return osrmc_get_version() >> 16u == OSRMC_VERSION_MAJOR; }
 
 /* API */
@@ -29,7 +30,6 @@ osrmc_config_t osrmc_config_construct(const char* base_path) try {
   out->use_shared_memory = false;
 
   return reinterpret_cast<osrmc_config_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -41,7 +41,6 @@ osrmc_osrm_t osrmc_osrm_construct(osrmc_config_t config) try {
   auto* out = new osrm::OSRM(*config_typed);
 
   return reinterpret_cast<osrmc_osrm_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -52,7 +51,6 @@ osrmc_route_params_t osrmc_route_params_construct(void) try {
   auto* out = new osrm::RouteParameters;
 
   return reinterpret_cast<osrmc_route_params_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -78,12 +76,12 @@ void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float l
   auto latitude_typed = osrm::util::FloatLatitude(latitude);
 
   params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
-
 } catch (...) {
   assert(false);
 }
 
-void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, float latitude, float radius, int bearing, int range) try {
+void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, float latitude, float radius, int bearing,
+                                      int range) try {
   auto* params_typed = reinterpret_cast<osrm::engine::api::BaseParameters*>(params);
 
   auto longitude_typed = osrm::util::FloatLongitude(longitude);
@@ -94,7 +92,6 @@ void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, fl
   params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
   params_typed->radiuses.emplace_back(radius);
   params_typed->bearings.emplace_back(std::move(bearing_typed));
-
 } catch (...) {
   assert(false);
 }
@@ -104,14 +101,12 @@ osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t param
   auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
 
   auto* out = new osrm::json::Object;
-
   const auto status = osrm_typed->Route(*params_typed, *out);
 
   if (status == osrm::Status::Ok)
     return reinterpret_cast<osrmc_route_response_t>(out);
   else
     return nullptr;
-
 } catch (...) {
   return nullptr;
 }
@@ -127,9 +122,7 @@ float osrmc_route_response_distance(osrmc_route_response_t response) try {
   auto& route = routes.values.at(0).get<osrm::json::Object>();
 
   const auto distance = route.values["distance"].get<osrm::json::Number>().value;
-
   return distance;
-
 } catch (...) {
   assert(false);
   return INFINITY;
@@ -142,9 +135,7 @@ float osrmc_route_response_duration(osrmc_route_response_t response) try {
   auto& route = routes.values.at(0).get<osrm::json::Object>();
 
   const auto duration = route.values["duration"].get<osrm::json::Number>().value;
-
   return duration;
-
 } catch (...) {
   assert(false);
   return INFINITY;
@@ -152,11 +143,7 @@ float osrmc_route_response_duration(osrmc_route_response_t response) try {
 
 osrmc_table_params_t osrmc_table_params_construct(void) try {
   auto* out = new osrm::TableParameters;
-
-  /* Only symmetric version supported: empty .sources, .destinations  means all to all */
-
   return reinterpret_cast<osrmc_table_params_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -168,14 +155,14 @@ void osrmc_table_params_destruct(osrmc_table_params_t params) {
 void osrmc_table_params_add_source(osrmc_table_params_t params, size_t index) try {
   auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
   params_typed->sources.emplace_back(index);
-} catch(...) {
+} catch (...) {
   assert(false);
 }
 
 void osrmc_table_params_add_destination(osrmc_table_params_t params, size_t index) try {
   auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
   params_typed->destinations.emplace_back(index);
-} catch(...) {
+} catch (...) {
   assert(false);
 }
 
@@ -184,14 +171,12 @@ osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t param
   auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
 
   auto* out = new osrm::json::Object;
-
   const auto status = osrm_typed->Table(*params_typed, *out);
 
   if (status == osrm::Status::Ok)
     return reinterpret_cast<osrmc_table_response_t>(out);
   else
     return nullptr;
-
 } catch (...) {
   return nullptr;
 }
@@ -216,9 +201,7 @@ float osrmc_table_response_duration(osrmc_table_response_t response, unsigned lo
 
 osrmc_nearest_params_t osrmc_nearest_params_construct(void) try {
   auto* out = new osrm::NearestParameters;
-
   return reinterpret_cast<osrmc_nearest_params_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -229,9 +212,7 @@ void osrmc_nearest_params_destruct(osrmc_nearest_params_t params) {
 
 osrmc_match_params_t osrmc_match_params_construct(void) try {
   auto* out = new osrm::MatchParameters;
-
   return reinterpret_cast<osrmc_match_params_t>(out);
-
 } catch (...) {
   return nullptr;
 }
@@ -242,15 +223,12 @@ void osrmc_match_params_destruct(osrmc_match_params_t params) {
 
 void osrmc_nearest_set_number_of_results(osrmc_nearest_params_t params, unsigned n) {
   auto* params_typed = reinterpret_cast<osrm::NearestParameters*>(params);
-
   params_typed->number_of_results = n;
 }
 
 void osrmc_match_params_add_timestamp(osrmc_match_params_t params, unsigned timestamp) try {
   auto* params_typed = reinterpret_cast<osrm::MatchParameters*>(params);
-
   params_typed->timestamps.emplace_back(timestamp);
-
 } catch (...) {
   assert(false);
 }
