@@ -49,10 +49,6 @@ void osrmc_osrm_destruct(osrmc_osrm_t osrm) { delete reinterpret_cast<osrm::OSRM
 osrmc_route_params_t osrmc_route_params_construct(void) try {
   auto* out = new osrm::RouteParameters;
 
-  out->steps = false;
-  out->alternatives = false;
-  out->overview = osrm::RouteParameters::OverviewType::False;
-
   return reinterpret_cast<osrmc_route_params_t>(out);
 
 } catch (...) {
@@ -61,6 +57,16 @@ osrmc_route_params_t osrmc_route_params_construct(void) try {
 
 void osrmc_route_params_destruct(osrmc_route_params_t params) {
   delete reinterpret_cast<osrm::RouteParameters*>(params);
+}
+
+void osrmc_route_params_add_steps(osrmc_route_params_t params, bool on) {
+  auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
+  params_typed->steps = on;
+}
+
+void osrmc_route_params_add_alternatives(osrmc_route_params_t params, bool on) {
+  auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
+  params_typed->alternatives = on;
 }
 
 void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float latitude) try {

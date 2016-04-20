@@ -42,6 +42,8 @@ OSRMC_API void osrmc_params_add_coordinate_with(osrmc_params_t params, float lon
 
 OSRMC_API osrmc_route_params_t osrmc_route_params_construct(void);
 OSRMC_API void osrmc_route_params_destruct(osrmc_route_params_t params);
+OSRMC_API void osrmc_route_params_add_steps(osrmc_route_params_t params, bool on);
+OSRMC_API void osrmc_route_params_add_alternatives(osrmc_route_params_t params, bool on);
 
 OSRMC_API osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t params);
 OSRMC_API void osrmc_route_response_destruct(osrmc_route_response_t response);
