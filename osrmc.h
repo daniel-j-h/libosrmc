@@ -21,6 +21,8 @@ OSRMC_API int osrmc_is_abi_compatible(void);
 typedef struct osrmc_config* osrmc_config_t;
 typedef struct osrmc_osrm* osrmc_osrm_t;
 
+typedef struct osrmc_params* osrmc_params_t;
+
 typedef struct osrmc_route_params* osrmc_route_params_t;
 typedef struct osrmc_route_response* osrmc_route_response_t;
 
@@ -35,9 +37,10 @@ OSRMC_API void osrmc_config_destruct(osrmc_config_t config);
 OSRMC_API osrmc_osrm_t osrmc_osrm_construct(osrmc_config_t config);
 OSRMC_API void osrmc_osrm_destruct(osrmc_osrm_t osrm);
 
+OSRMC_API void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float latitude);
+
 OSRMC_API osrmc_route_params_t osrmc_route_params_construct(void);
 OSRMC_API void osrmc_route_params_destruct(osrmc_route_params_t params);
-OSRMC_API void osrmc_route_params_add_coordinate(osrmc_route_params_t params, float longitude, float latitude);
 
 OSRMC_API osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t params);
 OSRMC_API void osrmc_route_response_destruct(osrmc_route_response_t response);
@@ -46,7 +49,6 @@ OSRMC_API float osrmc_route_response_duration(osrmc_route_response_t response);
 
 OSRMC_API osrmc_table_params_t osrmc_table_params_construct(void);
 OSRMC_API void osrmc_table_params_destruct(osrmc_table_params_t params);
-OSRMC_API void osrmc_table_params_add_coordinate(osrmc_table_params_t params, float longitude, float latitude);
 
 OSRMC_API osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params);
 OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response);

@@ -41,8 +41,8 @@ int main(int argc, char** argv) {
     goto params_failure;
   }
 
-  osrmc_route_params_add_coordinate(params, 7.419758, 43.731142);
-  osrmc_route_params_add_coordinate(params, 7.419505, 43.736825);
+  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419758, 43.731142);
+  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419505, 43.736825);
 
   response = osrmc_route(osrm, params);
 

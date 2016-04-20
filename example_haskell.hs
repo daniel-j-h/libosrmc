@@ -50,7 +50,7 @@ foreign import ccall "osrmc_route_params_construct"
 foreign import ccall "osrmc_route_params_destruct"
     destructRouteParams :: RouteParams -> IO ()
 
-foreign import ccall "osrmc_route_params_add_coordinate"
+foreign import ccall "osrmc_params_add_coordinate"
     addCoordinate :: RouteParams -> Float -> Float -> IO ()
 
 

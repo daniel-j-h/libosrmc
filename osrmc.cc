@@ -63,8 +63,8 @@ void osrmc_route_params_destruct(osrmc_route_params_t params) {
   delete reinterpret_cast<osrm::RouteParameters*>(params);
 }
 
-void osrmc_route_params_add_coordinate(osrmc_route_params_t params, float longitude, float latitude) try {
-  auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
+void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float latitude) try {
+  auto* params_typed = reinterpret_cast<osrm::engine::api::BaseParameters*>(params);
 
   auto longitude_typed = osrm::util::FloatLongitude(longitude);
   auto latitude_typed = osrm::util::FloatLatitude(latitude);
@@ -139,18 +139,6 @@ osrmc_table_params_t osrmc_table_params_construct(void) try {
 
 void osrmc_table_params_destruct(osrmc_table_params_t params) {
   delete reinterpret_cast<osrm::TableParameters*>(params);
-}
-
-void osrmc_table_params_add_coordinate(osrmc_table_params_t params, float longitude, float latitude) try {
-  auto* params_typed = reinterpret_cast<osrm::TableParameters*>(params);
-
-  auto longitude_typed = osrm::util::FloatLongitude(longitude);
-  auto latitude_typed = osrm::util::FloatLatitude(latitude);
-
-  params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
-
-} catch (...) {
-  assert(false);
 }
 
 osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params) try {

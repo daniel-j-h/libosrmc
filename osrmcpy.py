@@ -25,15 +25,16 @@ lib.osrmc_osrm_construct.argtypes = [c.c_void_p]
 lib.osrmc_osrm_destruct.restype = None
 lib.osrmc_osrm_destruct.argtypes = [c.c_void_p]
 
+# Generic Param Handling
+lib.osrmc_params_add_coordinate.restype = None
+lib.osrmc_params_add_coordinate.argtypes = [c.c_void_p, c.c_float, c.c_float]
+
 # Route Params
 lib.osrmc_route_params_construct.restype = c.c_void_p
 lib.osrmc_route_params_construct.argtypes = None
 
 lib.osrmc_route_params_destruct.restype = None
 lib.osrmc_route_params_destruct.argtypes = [c.c_void_p]
-
-lib.osrmc_route_params_add_coordinate.restype = None
-lib.osrmc_route_params_add_coordinate.argtypes = [c.c_void_p, c.c_float, c.c_float]
 
 # Route
 lib.osrmc_route.restype = c.c_void_p
@@ -54,9 +55,6 @@ lib.osrmc_table_params_construct.argtypes = None
 
 lib.osrmc_table_params_destruct.restype = None
 lib.osrmc_table_params_destruct.argtypes = [c.c_void_p]
-
-lib.osrmc_table_params_add_coordinate.restype = None
-lib.osrmc_table_params_add_coordinate.argtypes = [c.c_void_p, c.c_float, c.c_float]
 
 # Table
 
@@ -136,7 +134,7 @@ class OSRM:
             assert params
 
             for coordinate in coordinates:
-                lib.osrmc_route_params_add_coordinate(params, coordinate.longitude, coordinate.latitude)
+                lib.osrmc_params_add_coordinate(params, coordinate.longitude, coordinate.latitude)
 
             with scoped_route(_.osrm, params) as route:
                 if route:
@@ -151,7 +149,7 @@ class OSRM:
             assert params
 
             for coordinate in coordinates:
-                lib.osrmc_table_params_add_coordinate(params, coordinate.longitude, coordinate.latitude)
+                lib.osrmc_params_add_coordinate(params, coordinate.longitude, coordinate.latitude)
 
             with scoped_table(_.osrm, params) as table:
                 if table:
