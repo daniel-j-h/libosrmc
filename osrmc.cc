@@ -75,6 +75,22 @@ void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float l
   assert(false);
 }
 
+void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, float latitude, float radius, int bearing, int range) try {
+  auto* params_typed = reinterpret_cast<osrm::engine::api::BaseParameters*>(params);
+
+  auto longitude_typed = osrm::util::FloatLongitude(longitude);
+  auto latitude_typed = osrm::util::FloatLatitude(latitude);
+
+  osrm::engine::Bearing bearing_typed{static_cast<short>(bearing), static_cast<short>(range)};
+
+  params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
+  params_typed->radiuses.emplace_back(radius);
+  params_typed->bearings.emplace_back(std::move(bearing_typed));
+
+} catch (...) {
+  assert(false);
+}
+
 osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t params) try {
   auto* osrm_typed = reinterpret_cast<osrm::OSRM*>(osrm);
   auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
