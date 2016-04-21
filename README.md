@@ -1,9 +1,12 @@
-##### Building libosrmc.so
+##### Quick Start
 
     make
+    sudo make install
+    sudo ldconfig
 
-    ln -s libosrmc.so.1.0 libosrmc.so.1
-    ln -s libosrmc.so.1.0 libosrmc.so
+This compiles the `libosrmc.so` shared object and installs it into `/usr/local`.
+The library's interface `osrmc.h` gets installed into `/usr/local/include`.
+You can modify defaults via `config.mk`.
 
 ##### Using libosrmc.so In C Projects
 
@@ -11,16 +14,13 @@ Compile and link your ANSI C standard (or higher) conforming project.
 
     gcc -O2 -Wall -Wextra -pedantic -std=c89 -I. -L. example_c89.c -losrmc -o example_c89
 
-We need to point `LD_LIBRARY_PATH` to the directory containing `libosrmc.so` or install `libosrmc.so` into `/usr/lib/`.
-
-    env LD_LIBRARY_PATH="." ldd ./example_c89
-    env LD_LIBRARY_PATH="." ./example_c89 /tmp/osrm-backend/test/data/monaco.osrm
+    ./example_c89 /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
     Duration: 119 seconds
 
 Direct dependencies.
 
-    env LD_LIBRARY_PATH="." readelf -d example_c89 | ag needed
+    readelf -d example_c89 | ag needed
      0x0000000000000001 (NEEDED)             Shared library: [libosrmc.so.1]
      0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
 
@@ -28,7 +28,7 @@ Direct dependencies.
 
 See `osrmcpy.py` for the FFI bindings and `example_python.py` for usage.
 
-    env LD_LIBRARY_PATH="." python2 example_python2.py /tmp/osrm-backend/test/data/monaco.osrm
+    python2 example_python2.py /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
     Duration: 119 seconds
     Table
@@ -54,7 +54,7 @@ Install or-tools.
 
 Solve random Traveling Salesman Problem instance with or-tools based on OSRM Table service durations.
 
-    env LD_LIBRARY_PATH="." python2 example_or_tools.py /tmp/osrm-backend/test/data/monaco.osrm
+    python2 example_or_tools.py /tmp/osrm-backend/test/data/monaco.osrm
     Solution: 1686 seconds
 
 References:
@@ -69,21 +69,20 @@ References:
 
 See `example_haskell.hs`. Either use `runghc` for convenience.
 
-    env LD_LIBRARY_PATH="." runghc -losrmc example_haskell.hs
+    runghc -losrmc example_haskell.hs
     Distance: 1715.3 meters
     Duration: 1715.3 seconds
 
 Or build an executable.
 
     ghc --make -L. -losrmc example_haskell.hs
-    env LD_LIBRARY_PATH="." ./example_haskell
+    ./example_haskell
     Distance: 1715.3 meters
     Duration: 1715.3 seconds
 
 ##### Todo
 
 - [ ] Remaining Services
-- [ ] Install Target
 - [ ] Use from Language FFIs
 - [ ] Make Python Integration Exception-Safe
 
