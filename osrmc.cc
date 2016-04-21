@@ -126,6 +126,35 @@ osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t param
   return nullptr;
 }
 
+void osrmc_route_with(osrmc_osrm_t osrm, osrmc_route_params_t params, osrmc_waypoint_handler_t handler, void* data,
+                      osrmc_error_t* error) try {
+  auto* osrm_typed = reinterpret_cast<osrm::OSRM*>(osrm);
+  auto* params_typed = reinterpret_cast<osrm::RouteParameters*>(params);
+
+  osrm::json::Object result;
+  const auto status = osrm_typed->Route(*params_typed, result);
+
+  if (status != osrm::Status::Ok) {
+    *error = new osrmc_error{"service request failed"};
+    return;
+  }
+
+  const auto& waypoints = result.values.at("waypoints").get<osrm::json::Array>().values;
+
+  for (const auto& waypoint : waypoints) {
+    const auto& waypoint_typed = waypoint.get<osrm::json::Object>();
+    const auto& location = waypoint_typed.values.at("location").get<osrm::json::Array>().values;
+
+    const auto& name = waypoint_typed.values.at("name").get<osrm::json::String>().value;
+    const auto longitude = location[0].get<osrm::json::Number>().value;
+    const auto latitude = location[1].get<osrm::json::Number>().value;
+
+    (void)handler(data, name.c_str(), longitude, latitude);
+  }
+} catch (const std::exception& e) {
+  *error = new osrmc_error{e.what()};
+}
+
 void osrmc_route_response_destruct(osrmc_route_response_t response) {
   delete reinterpret_cast<osrm::json::Object*>(response);
 }

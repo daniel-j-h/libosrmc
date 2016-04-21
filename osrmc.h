@@ -35,6 +35,10 @@ typedef struct osrmc_nearest_params* osrmc_nearest_params_t;
 
 typedef struct osrmc_match_params* osrmc_match_params_t;
 
+/* Callbacks */
+
+typedef void (*osrmc_waypoint_handler_t)(void* data, const char* name, float longitude, float latitude);
+
 /* API */
 
 OSRMC_API const char* osrmc_error_message(osrmc_error_t error);
@@ -57,6 +61,8 @@ OSRMC_API void osrmc_route_params_add_steps(osrmc_route_params_t params, int on)
 OSRMC_API void osrmc_route_params_add_alternatives(osrmc_route_params_t params, int on);
 
 OSRMC_API osrmc_route_response_t osrmc_route(osrmc_osrm_t osrm, osrmc_route_params_t params, osrmc_error_t* error);
+OSRMC_API void osrmc_route_with(osrmc_osrm_t osrm, osrmc_route_params_t params, osrmc_waypoint_handler_t handler,
+                                void* data, osrmc_error_t* error);
 OSRMC_API void osrmc_route_response_destruct(osrmc_route_response_t response);
 OSRMC_API float osrmc_route_response_distance(osrmc_route_response_t response, osrmc_error_t* error);
 OSRMC_API float osrmc_route_response_duration(osrmc_route_response_t response, osrmc_error_t* error);

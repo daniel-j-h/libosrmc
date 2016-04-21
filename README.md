@@ -17,6 +17,8 @@ Compile and link your ANSI C standard (or higher) conforming project.
     ./example_c89 /tmp/osrm-backend/test/data/monaco.osrm
     Distance: 1715 meters
     Duration: 119 seconds
+    Name: Tunnel Rocher Palais, Longitude: 7.41962, Latitude: 43.73138
+    Name: Boulevard Rainier III, Longitude: 7.41954, Latitude: 43.73680
 
 Direct dependencies.
 
@@ -83,6 +85,7 @@ Or build an executable.
 ##### Todo
 
 - [ ] Remaining Services
+- [ ] Callbacks for Responses
 - [ ] Use from Language FFIs
 - [ ] Make Python Integration Exception-Safe
 
