@@ -5,6 +5,7 @@
 #include <osrmc.h>
 
 
+/* Custom handler for printing information about all waypoints */
 void waypoint_handler(void* data, const char* name, float longitude, float latitude) {
   (void)data;
   printf("Name: %s, Longitude: %.5f, Latitude: %.5f\n", name, longitude, latitude);
@@ -21,7 +22,7 @@ int main(int argc, char** argv) {
   float distance;
   float duration;
 
-  /* Installed header interface does not match installed library */
+  /* Make sure installed header interface matches installed library */
   assert(osrmc_is_abi_compatible());
 
   if (argc != 2) {
@@ -31,6 +32,7 @@ int main(int argc, char** argv) {
 
   error = NULL;
 
+  /* Create osrmc from a config setting the .osrm base path */
   config = osrmc_config_construct(argv[1], &error);
   if (error)
     goto config_cleanup;
@@ -39,6 +41,7 @@ int main(int argc, char** argv) {
   if (error)
     goto osrm_cleanup;
 
+  /* Create parameters for the Route service and add some locations */
   params = osrmc_route_params_construct(&error);
   if (error)
     goto params_cleanup;
@@ -49,6 +52,7 @@ int main(int argc, char** argv) {
   if (error)
     goto params_cleanup;
 
+  /* Send request to the Route service, extract distance and duration from the response */
   response = osrmc_route(osrm, params, &error);
   if (error)
     goto response_cleanup;
@@ -62,11 +66,13 @@ int main(int argc, char** argv) {
   printf("Distance: %.0f meters\n", distance);
   printf("Duration: %.0f seconds\n", duration);
 
+  /* Alternatively let the library run our custom waypoint handler for each waypoint */
   osrmc_route_with(osrm, params, waypoint_handler, NULL, &error);
   if (error)
     goto response_cleanup;
 
 
+/* Properly clean up resources, emulate stack-unwinding */
 response_cleanup:
   osrmc_route_response_destruct(response);
 params_cleanup:
@@ -76,11 +82,13 @@ osrm_cleanup:
 config_cleanup:
   osrmc_config_destruct(config);
 
+  /* If we got here on a failure path notify the user */
   if (error) {
     fprintf(stderr, "Error: %s\n", osrmc_error_message(error));
     osrmc_error_destruct(error);
     return EXIT_FAILURE;
   }
 
+  /* Otherwise we're done */
   return EXIT_SUCCESS;
 }
