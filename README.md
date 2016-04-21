@@ -84,7 +84,6 @@ Or build an executable.
 
 - [ ] Remaining Services
 - [ ] Install Target
-- [ ] Error Handling
 - [ ] Use from Language FFIs
 - [ ] Make Python Integration Exception-Safe
 

@@ -5,6 +5,7 @@
 #include <osrmc.h>
 
 int main(int argc, char** argv) {
+  osrmc_error_t error;
   osrmc_config_t config;
   osrmc_osrm_t osrm;
   osrmc_route_params_t params;
@@ -18,41 +19,38 @@ int main(int argc, char** argv) {
 
   if (argc != 2) {
     fprintf(stderr, "Usage: %s monaco.osrm", argv[0]);
-    goto usage_failure;
+    return EXIT_FAILURE;
   }
-  config = osrmc_config_construct(argv[1]);
 
-  if (!config) {
-    fprintf(stderr, "Error: unable to construct engine config");
+  error = NULL;
+
+  config = osrmc_config_construct(argv[1], &error);
+  if (error)
     goto config_failure;
-  }
 
-  osrm = osrmc_osrm_construct(config);
-
-  if (!osrm) {
-    fprintf(stderr, "Error: unable to construct routing machine");
+  osrm = osrmc_osrm_construct(config, &error);
+  if (error)
     goto osrm_failure;
-  }
 
-  params = osrmc_route_params_construct();
-
-  if (!params) {
-    fprintf(stderr, "Error: unable to construct route parameters");
+  params = osrmc_route_params_construct(&error);
+  if (error)
     goto params_failure;
-  }
 
-  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419758, 43.731142);
-  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419505, 43.736825);
+  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419758, 43.731142, &error);
+  osrmc_params_add_coordinate((osrmc_params_t)params, 7.419505, 43.736825, &error);
 
-  response = osrmc_route(osrm, params);
+  if (error)
+    goto params_failure;
 
-  if (!response) {
-    fprintf(stderr, "Error: unable to construct route response");
+  response = osrmc_route(osrm, params, &error);
+  if (error)
     goto response_failure;
-  }
 
-  distance = osrmc_route_response_distance(response);
-  duration = osrmc_route_response_duration(response);
+  distance = osrmc_route_response_distance(response, &error);
+  duration = osrmc_route_response_duration(response, &error);
+
+  if (error)
+    goto response_failure;
 
   printf("Distance: %.0f meters\n", distance);
   printf("Duration: %.0f seconds\n", duration);
@@ -68,6 +66,9 @@ osrm_failure:
   osrmc_osrm_destruct(osrm);
 config_failure:
   osrmc_config_destruct(config);
-usage_failure:
+
+  fprintf(stderr, "Error: %s\n", osrmc_error_message(error));
+  osrmc_error_destruct(error);
+
   return EXIT_FAILURE;
 }
