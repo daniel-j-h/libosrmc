@@ -8,6 +8,8 @@ This compiles the `libosrmc.so` shared object and installs it into `/usr/local`.
 The library's interface `osrmc.h` gets installed into `/usr/local/include`.
 You can modify defaults via `config.mk`.
 
+Please refer to [`osrmc.h`](https://github.com/daniel-j-h/libosrmc/blob/master/osrmc.h) for library documentation.
+
 ##### Using libosrmc.so In C Projects
 
 Compile and link your ANSI C standard (or higher) conforming project.
