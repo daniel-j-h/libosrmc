@@ -16,7 +16,7 @@
  * Example:
  *
  *   osrmc_config_t config = osrmc_config_construct(path, &error);
- *   osrmc_osrm_t osrm + osrmc_osrm_construct(config, &error);
+ *   osrmc_osrm_t osrm = osrmc_osrm_construct(config, &error);
  *
  * For querying a service you have to first create a service-specific parameters object.
  * Constructing an object follows the naming convention osrmc_service_params_construct.
@@ -26,7 +26,7 @@
  *
  * Adding coordinates works across all parameters using osrmc_params_add_coordinate and the
  * more specific osrmc_params_add_coordinate_with allowing for more control over snapping.
- * Both functions work on the structural-base type osrmc_params_t.
+ * Both functions work on the structural base type osrmc_params_t.
  *
  * Example:
  *
