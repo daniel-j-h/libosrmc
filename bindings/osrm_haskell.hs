@@ -102,8 +102,8 @@ withRoute osrm params body = bracket construct destruct body
 main = do
     let base  = "/tmp/osrm-backend/test/data/monaco.osrm"
 
-    let start = Coordinate{longitude=7.419758, latitude=43.731142}
-    let end   = Coordinate{longitude=7.419505, latitude=43.736825}
+    let start = Coordinate { longitude=7.419758, latitude=43.731142 }
+    let end   = Coordinate { longitude=7.419505, latitude=43.736825 }
 
     flip runContT return $ do
         config <- ContT $ withConfig base

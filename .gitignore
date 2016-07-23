@@ -1,11 +1,6 @@
-osrmc.o
-example_c89
-example_haskell
-example_haskell.hi
-example_haskell.o
-
-libosrmc.so.1.0
-libosrmc.so.1
-libosrmc.so
+libosrmc/osrmc.o
+libosrmc/libosrmc.so.1.0
+libosrmc/libosrmc.so.1
+libosrmc/libosrmc.so
 
 *.py[cod]

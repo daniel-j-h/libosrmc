@@ -1,5 +1,5 @@
-#ifndef OSRM_C_H_
-#define OSRM_C_H_
+#ifndef OSRMC_H_
+#define OSRMC_H_
 
 /*
  * The following provides a high-level interface overview for libosrmc.
@@ -108,16 +108,20 @@
  *
  */
 
-#include "visibility.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* ABI Stability */
 
-#define OSRMC_VERSION_MAJOR 1
-#define OSRMC_VERSION_MINOR 0
+#if __GNUC__ >= 4
+  #define OSRMC_API __attribute__((visibility("default")))
+#else
+  #define OSRMC_API
+#endif
+
+#define OSRMC_VERSION_MAJOR 5
+#define OSRMC_VERSION_MINOR 3
 #define OSRMC_VERSION ((OSRMC_VERSION_MAJOR << 16) | OSRMC_VERSION_MINOR)
 
 OSRMC_API unsigned osrmc_get_version(void);
@@ -195,7 +199,7 @@ OSRMC_API void osrmc_table_params_add_source(osrmc_table_params_t params, size_t
 OSRMC_API void osrmc_table_params_add_destination(osrmc_table_params_t params, size_t index, osrmc_error_t* error);
 
 OSRMC_API osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params, osrmc_error_t* error);
-OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response, osrmc_error_t* error);
+OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response);
 OSRMC_API float osrmc_table_response_duration(osrmc_table_response_t response, unsigned long from, unsigned long to,
                                               osrmc_error_t* error);
 /* Nearest service */
@@ -207,7 +211,7 @@ OSRMC_API void osrmc_nearest_set_number_of_results(osrmc_nearest_params_t params
 /* Match service */
 
 OSRMC_API osrmc_match_params_t osrmc_match_params_construct(osrmc_error_t* error);
-OSRMC_API void osrmc_match_params_destruct(osrmc_match_params_t params, osrmc_error_t* error);
+OSRMC_API void osrmc_match_params_destruct(osrmc_match_params_t params);
 OSRMC_API void osrmc_match_params_add_timestamp(osrmc_match_params_t params, unsigned timestamp, osrmc_error_t* error);
 
 #ifdef __cplusplus

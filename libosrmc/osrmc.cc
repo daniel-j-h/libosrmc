@@ -62,8 +62,8 @@ void osrmc_osrm_destruct(osrmc_osrm_t osrm) { delete reinterpret_cast<osrm::OSRM
 void osrmc_params_add_coordinate(osrmc_params_t params, float longitude, float latitude, osrmc_error_t* error) try {
   auto* params_typed = reinterpret_cast<osrm::engine::api::BaseParameters*>(params);
 
-  auto longitude_typed = osrm::util::FloatLongitude(longitude);
-  auto latitude_typed = osrm::util::FloatLatitude(latitude);
+  auto longitude_typed = osrm::util::FloatLongitude{longitude};
+  auto latitude_typed = osrm::util::FloatLatitude{latitude};
 
   params_typed->coordinates.emplace_back(std::move(longitude_typed), std::move(latitude_typed));
 } catch (const std::exception& e) {
@@ -74,8 +74,8 @@ void osrmc_params_add_coordinate_with(osrmc_params_t params, float longitude, fl
                                       int range, osrmc_error_t* error) try {
   auto* params_typed = reinterpret_cast<osrm::engine::api::BaseParameters*>(params);
 
-  auto longitude_typed = osrm::util::FloatLongitude(longitude);
-  auto latitude_typed = osrm::util::FloatLatitude(latitude);
+  auto longitude_typed = osrm::util::FloatLongitude{longitude};
+  auto latitude_typed = osrm::util::FloatLatitude{latitude};
 
   osrm::engine::Bearing bearing_typed{static_cast<short>(bearing), static_cast<short>(range)};
 

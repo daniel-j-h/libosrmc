@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <osrmc.h>
+#include <osrmc/osrmc.h>
 
 
 /* Custom handler for printing information about all waypoints */
