@@ -119,4 +119,4 @@ main = do
         dura <- liftIO $ duration response
 
         liftIO . putStrLn $ "Distance: " <> (show dist) <> " meters"
-        liftIO . putStrLn $ "Duration: " <> (show dist) <> " seconds"
+        liftIO . putStrLn $ "Duration: " <> (show dura) <> " seconds"

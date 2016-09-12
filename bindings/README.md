@@ -62,13 +62,13 @@ References:
 See `osrm_haskell.hs`. Either use `runghc` for convenience.
 
     runghc -losrmc osrm_haskell.hs
-    Distance: 1715.3 meters
-    Duration: 1715.3 seconds
+    Distance: 1999.8 meters
+    Duration: 133.2 seconds
 
 Or build an executable.
 
     ghc --make -L. -losrmc osrm_haskell.hs
     ./osrm_haskell
-    Distance: 1715.3 meters
-    Duration: 1715.3 seconds
+    Distance: 1999.8 meters
+    Duration: 133.2 seconds
 
