@@ -36,8 +36,15 @@ void osrmc_error_destruct(osrmc_error_t error) { delete error; }
 osrmc_config_t osrmc_config_construct(const char* base_path, osrmc_error_t* error) try {
   auto* out = new osrm::EngineConfig;
 
-  out->storage_config = osrm::StorageConfig(base_path);
-  out->use_shared_memory = false;
+  if (base_path)
+  {
+      out->storage_config = osrm::StorageConfig(base_path);
+      out->use_shared_memory = false;
+  }
+  else
+  {
+      out->use_shared_memory = true;
+  }
 
   return reinterpret_cast<osrmc_config_t>(out);
 } catch (const std::exception& e) {

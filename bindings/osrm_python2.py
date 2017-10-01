@@ -10,10 +10,10 @@ from osrmcpy import OSRM, Coordinate
 
 # Example User Code
 def main():
-    if len(sys.argv) != 2:
-        sys.exit('Usage: {} monaco.osrm'.format(sys.argv[0]))
+    if '--help' in sys.argv or '-h' in sys.argv:
+        sys.exit('Usage: {} [OSRM data base path]'.format(sys.argv[0]))
 
-    osrm = OSRM(sys.argv[1])
+    osrm = OSRM(sys.argv[1] if len(sys.argv) >= 2 else None)
 
     start = Coordinate(longitude=7.419758, latitude=43.731142)
     end = Coordinate(longitude=7.419505, latitude=43.736825)
