@@ -41,7 +41,7 @@ lib.osrmc_route.restype = c.c_void_p
 lib.osrmc_route.argtypes = [c.c_void_p, c.c_void_p]
 
 lib.osrmc_route_response_destruct.restype = None
-lib.osrmc_route_response_destruct.artypes = [c.c_void_p]
+lib.osrmc_route_response_destruct.argtypes = [c.c_void_p]
 
 lib.osrmc_route_response_distance.restype = c.c_float
 lib.osrmc_route_response_distance.argtypes = [c.c_void_p]
