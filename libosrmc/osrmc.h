@@ -159,6 +159,7 @@ typedef void (*osrmc_waypoint_handler_t)(void* data, const char* name, float lon
 
 /* Error handling */
 
+OSRMC_API const char* osrmc_error_code(osrmc_error_t error);
 OSRMC_API const char* osrmc_error_message(osrmc_error_t error);
 OSRMC_API void osrmc_error_destruct(osrmc_error_t error);
 

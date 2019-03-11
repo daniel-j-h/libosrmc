@@ -84,7 +84,7 @@ config_cleanup:
 
   /* If we got here on a failure path notify the user */
   if (error) {
-    fprintf(stderr, "Error: %s\n", osrmc_error_message(error));
+    fprintf(stderr, "Error: code=%s, message=%s\n", osrmc_error_code(error), osrmc_error_message(error));
     osrmc_error_destruct(error);
     return EXIT_FAILURE;
   }
