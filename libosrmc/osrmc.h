@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef OSRMC_H_
 #define OSRMC_H_
 
@@ -144,6 +146,7 @@ typedef struct osrmc_params* osrmc_params_t;
 
 typedef struct osrmc_route_params* osrmc_route_params_t;
 typedef struct osrmc_table_params* osrmc_table_params_t;
+typedef struct osrmc_table_annotations* osrmc_table_annotations_t;
 typedef struct osrmc_nearest_params* osrmc_nearest_params_t;
 typedef struct osrmc_match_params* osrmc_match_params_t;
 
@@ -194,15 +197,26 @@ OSRMC_API float osrmc_route_response_duration(osrmc_route_response_t response, o
 
 /* Table service */
 
+OSRMC_API osrmc_table_annotations_t osrmc_table_annotations_construct(osrmc_error_t* error);
+OSRMC_API void osrmc_table_annotations_destruct(osrmc_table_annotations_t annotations);
+OSRMC_API void osrmc_table_annotations_enable_distance(osrmc_table_annotations_t annotations, bool enable, osrmc_error_t* error);
+
 OSRMC_API osrmc_table_params_t osrmc_table_params_construct(osrmc_error_t* error);
 OSRMC_API void osrmc_table_params_destruct(osrmc_table_params_t params);
+OSRMC_API void osrmc_table_params_set_annotations(osrmc_table_params_t params, osrmc_table_annotations_t annotations, osrmc_error_t* error);
 OSRMC_API void osrmc_table_params_add_source(osrmc_table_params_t params, size_t index, osrmc_error_t* error);
 OSRMC_API void osrmc_table_params_add_destination(osrmc_table_params_t params, size_t index, osrmc_error_t* error);
 
 OSRMC_API osrmc_table_response_t osrmc_table(osrmc_osrm_t osrm, osrmc_table_params_t params, osrmc_error_t* error);
 OSRMC_API void osrmc_table_response_destruct(osrmc_table_response_t response);
+
+// INFINITY will be returned if there is no route between the from/to.
+// An error will also be returned with a code of 'NoRoute'.
 OSRMC_API float osrmc_table_response_duration(osrmc_table_response_t response, unsigned long from, unsigned long to,
                                               osrmc_error_t* error);
+OSRMC_API float osrmc_table_response_distance(osrmc_table_response_t response, unsigned long from, unsigned long to,
+                                              osrmc_error_t* error);
+
 /* Nearest service */
 
 OSRMC_API osrmc_nearest_params_t osrmc_nearest_params_construct(osrmc_error_t* error);
